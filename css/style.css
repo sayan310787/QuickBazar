@@ -1,0 +1,61 @@
+/*Index Page CSS*/
+/*Header CSS*/
+.navbar-inverse .navbar-nav>li>a{
+    color: #ECF0F1;
+}
+.navbar-inverse {
+    background-color: #34302d !important;
+    border-color: #080808;
+    background-image: linear-gradient(to bottom,#34302d 0,#34302d 100%);
+    border-top: 4px solid #6db33f;
+}
+.header-active{
+    background-color: #6db33f;
+}
+.header-image{
+    max-width: 40px;
+    max-height: 40px;
+    margin-top: 6px;
+}
+.navbar-inverse .navbar-nav>li>a:focus, .navbar-inverse .navbar-nav>li>a:hover{
+    background-color: #6db33f;
+}
+.body-padding{
+    padding-bottom: 20px;
+}
+@media only screen and (max-width: 600px) {
+    .body-padding{
+        padding-bottom: 60px;
+    }
+}
+
+/*Login Page CSS*/
+.login-box-position{
+    width: 400px;
+    margin: 8% auto;
+}
+/*Product Catalog page CSS*/
+.icon-grey{
+    fill: rgba(194,194,194,0.87);
+    outline: none;;
+}
+.redText{
+    background-color: #f2dede;
+}
+.greenText{
+    background-color: #dff0d8;
+}
+md-toast.md-bottom{
+    bottom: 58%;
+}
+md-toast.md-success-toast-theme .md-toast-content{
+    background-color: #0f5b00;
+}
+md-toast.md-error-toast-theme .md-toast-content{
+    background-color: #761c19;
+}
+.refresh-icon{
+    font-size: 20px;
+    font-weight: bold;
+    padding-left: 20px;
+}

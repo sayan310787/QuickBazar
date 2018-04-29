@@ -1,0 +1,87 @@
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar-toggle-mobile-device" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <img ng-src="images/Logo.jpg" style="height: 50px;width: 180px; padding-right: 10px">
+            <a class="navbar-brand" href="" style="float: none;">Admin Pannel</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-toggle-mobile-device">
+            <ul class="nav navbar-nav">
+                <li ui-sref="home.productCatalog" ui-sref-active="header-active" ng-if="notRestricted"><a href="">Product Category</a></li>
+                <li><a href="" ui-sref="home.catalogItems" ui-sref-active="header-active" ng-if="notRestricted">Catalog Items</a></li>
+                <li><a href="" ui-sref="home.customerManagement" ui-sref-active="header-active" ng-if="notRestricted">Customer Management</a></li>
+                <li><a href="" ui-sref="home.orders" ui-sref-active="header-active">Orders</a></li>
+                <li><a href="" ui-sref="home.offers" ui-sref-active="header-active" ng-if="notRestricted">Offers</a></li>
+                <li><a href="" ui-sref="home.settingsUpdate" ui-sref-active="header-active" ng-if="notRestricted">Settings Update</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right row">
+                <img src="{{imageStaticUrl}}{{imageUrl}}" alt="Sayan" class="img-circle header-image">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Hi! {{userId}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="" ng-click="changePassword()" aria-hidden="true" data-toggle="modal"
+                               data-target="#passChangeModal">Change Password</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row" style="padding: 10px">
+        <div class="modal fade" id="passChangeModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                                data-dismiss="modal">
+                            <span aria-hidden="true" ng-click="resetPassForm()">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title">Change Password</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" name="passChangeForm" novalidate>
+                            <div class="form-group">
+                                <label>User ID</label>
+                                <input type="text" class="form-control" name="userId" ng-disabled="true"
+                                       ng-model="passModel.id" placeholder="XXXXXXXXXXXXXXXX" required/>
+                                <span id="helpBlock" class="help-block">User ID is automatically filled, need not to fill this field</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Enter Current Password</label>
+                                <input type="password" class="form-control" name="currentPass"
+                                       ng-model="passModel.currentPassword" placeholder="Enter Current Password" required/>
+                            </div>
+                            <div class="form-group">
+                                <label>Enter New Password</label>
+                                <input type="{{inputType}}" class="form-control" placeholder="Enter New Password"
+                                       name="newPass" ng-model="passModel.newPassword" required/>
+                                <input type="checkbox" ng-model="passwordCheckbox" id="checkbox" ng-click="hideShowPassword()">
+                                <label for="checkbox" ng-if="passwordCheckbox">Hide password</label>
+                                <label for="checkbox" ng-if="!passwordCheckbox">Show password</label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" ng-click="resetPassForm()">
+                            Reset
+                        </button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                ng-disabled="passChangeForm.$invalid" ng-click="submitPassForm(passModel)">Change</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

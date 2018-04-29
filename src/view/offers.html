@@ -1,0 +1,139 @@
+<div class="container-fluid">
+    <div class="row" style="padding: 10px">
+        <div style="float: right;">
+            <span class="glyphicon glyphicon-refresh refresh-icon" ng-click="refreshContent()"></span>
+        </div>
+        <md-content class="md-padding" layout-xs="column" layout="row"  layout-wrap>
+            <div flex="25" flex-xs="100" layout="row" layout-xs="column">
+                <md-card>
+                    <md-card-header>
+                        <md-card-header-text>
+                            <span class="md-headline">Add A New Offer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        </md-card-header-text>
+                    </md-card-header>
+                    <div class= "md-media-xl card-media" style="text-align: -webkit-center;">
+                        <ng-md-icon icon="add" class="icon-grey" size="200px"
+                                    data-toggle="modal" data-target="#addEditOfferModal" ng-click=""></ng-md-icon>
+                    </div>
+                </md-card>
+            </div>
+            <div flex="25" flex-xs="100" layout="row" layout-xs="column" ng-repeat="offer in allOffers" ng-if="!noOfferData">
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">{{offer.title}}</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-content layout="row" layout-align="space-between">
+                        <div class="md-media-xl card-media">
+                            <img style="height: 200px; width: 240px;" src="{{imageStaticUrl}}{{offer.imageUrl}}">
+                        </div>
+                    </md-card-content>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button class="md-warn md-raised md-hue-4" data-toggle="modal"
+                                   data-target="#addEditOfferModal" ng-click="editOffer(offer)">Edit</md-button>
+                        <md-button class="md-danger md-raised" data-toggle="modal"
+                                   data-target="#deleteModal" ng-click="deleteOffer(offer)">Delete</md-button>
+                    </md-card-actions>
+                </md-card>
+            </div>
+            <div flex="33" flex-xs="100" layout="row" layout-xs="column" ng-if="noOfferData">
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">No Data to Display</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                </md-card>
+            </div>
+        </md-content>
+        <div class="modal fade" id="addEditOfferModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                                data-dismiss="modal">
+                            <span aria-hidden="true" ng-click="resetOfferForm()">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Add/Edit Offer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" name="addEditOfferForm" novalidate>
+                            <div class="form-group">
+                                <label>Offer ID</label>
+                                <input type="text" class="form-control" placeholder="XXXXXXXXXXXXX"
+                                       ng-disabled="true" value="" name="catalogId" ng-model="offerModel.id">
+                                    <span id="helpBlock" class="help-block">
+                                        Offer ID is automatically allocated, need not to fill this field</span>
+                            </div>
+                            <div class="form-group"
+                                 ng-class="{'has-error' : addEditOfferForm.title.$invalid && !addEditOfferForm.title.$pristine}">
+                                <label>Offer Title*</label>
+                                <input type="text" class="form-control" name="title"
+                                       ng-model="offerModel.title" placeholder="Enter Offer title.." required/>
+                                <p ng-show="addEditOfferForm.title.$invalid && !addEditOfferForm.title.$pristine"
+                                   class="text-danger">Category name is mandatory.</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Valid From*</label>
+                                            <!--<div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>-->
+                                            <input type="date" class="form-control" placeholder="Please enter unit price"
+                                                   ng-model="offerModel.start_date" value="{{offerModel.start_date}}" name="startDate"/>
+                                        <p ng-show="addEditOfferForm.startDate.$invalid && !addEditItemForm.startDate.$pristine"
+                                           class="text-danger">Please Enter a price</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Valid To*</label>
+                                        <input type="date" class="form-control" placeholder="Please enter unit price"
+                                               ng-model="offerModel.end_date" value="" name="endDate">
+                                        <p ng-show="addEditOfferForm.endDate.$invalid && !addEditItemForm.endDate.$pristine"
+                                           class="text-danger">Please Enter a price</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Upload Image for Category</label>
+                                        <input type="file" name="file" class="inputimg" id="offerIcon" accept="image/*"
+                                               onchange="angular.element(this).scope().uploadImage('offerIcon')" ng-model="offerModel.image" value="Image">
+                                        <span class="text-muted">Note: Image displayed in case of Edit is current image,please upload to add a new image.</span>
+                                    </div>
+                                    <img src="{{imageStaticUrl}}{{offerModel.image}}" class="table-image" ng-if="offerModel.image"
+                                            style="width: 200px; height: 100px;">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" ng-click="resetOfferForm()">
+                            Reset
+                        </button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                ng-disabled="addEditOfferForm.$invalid || isImageUploading"
+                                ng-click="submitOfferForm(offerModel)">Add/Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="deleteModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p>Are you sure, you want to delete the record?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="confirmDelete()">Yes</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

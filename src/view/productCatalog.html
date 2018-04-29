@@ -1,0 +1,137 @@
+<div class="container-fluid">
+    <div class="row" style="padding: 10px">
+        <div style="float: right;">
+            <span class="glyphicon glyphicon-refresh refresh-icon" ng-click="refreshContent()"></span>
+        </div>
+        <md-content class="md-padding" layout-xs="column" layout="row"  layout-wrap>
+            <div flex="33" flex-xs="100" layout="row" layout-xs="column">
+                <md-card>
+                    <md-card-header>
+                        <md-card-header-text>
+                            <span class="md-headline">Add A New Category&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        </md-card-header-text>
+                    </md-card-header>
+                        <div class= "md-media-xl card-media" style="text-align: -webkit-center;">
+                            <ng-md-icon icon="add" class="icon-grey" size="200px"
+                                        data-toggle="modal" data-target="#addEditCatalogModal" ng-click=""></ng-md-icon>
+                        </div>
+                </md-card>
+            </div>
+            <div flex="33" flex-xs="100" layout="row" layout-xs="column" ng-repeat="category in allCatalog"  ng-if="!catLoading || !noCatData">
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">{{category.name}}</span>
+                            <span class="md-subhead" ng-bind="category.description"></span>
+                            <md-chips><md-chip>Total Items: {{category.productCount}}</md-chip></md-chips>
+                        </md-card-title-text>
+                        <md-card-title-media>
+                            <div class="md-media-lg card-media">
+                                <img style="width: 160px; height: 175px;" ng-src="{{imageStaticUrl}}{{category.imageUrl}}">
+                            </div>
+                        </md-card-title-media>
+                    </md-card-title>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button class="md-primary md-raised md-hue-4" style="margin: 10px;" ui-sref="home.catalogItems({catId: category.id})">View</md-button>
+                        <md-button class="md-warn md-raised md-hue-4" data-toggle="modal"
+                                   data-target="#addEditCatalogModal" ng-click="editCatalog(category)">Edit</md-button>
+                        <md-button class="md-danger md-raised" data-toggle="modal"
+                                   data-target="#deleteModal" ng-click="deleteCatalog(category)">Delete</md-button>
+                    </md-card-actions>
+                </md-card>
+            </div>
+            <div layout="row" layout-sm="column" layout-align="space-around" ng-if="catLoading">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+                <div flex="33" flex-xs="100" layout="row" layout-xs="column" ng-if="noCatData">
+                    <md-card>
+                        <md-card-title>
+                            <md-card-title-text>
+                                <span class="md-headline">No Data to Display</span>
+                            </md-card-title-text>
+                        </md-card-title>
+                    </md-card>
+                </div>
+         </md-content>
+        <div class="modal fade" id="addEditCatalogModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                                data-dismiss="modal">
+                            <span aria-hidden="true" ng-click="resetCatalogForm()">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Add/Edit Category</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" name="addEditCatalogForm" novalidate>
+                            <div class="form-group">
+                                <label>Category ID</label>
+                                <input type="text" class="form-control" placeholder="XXXXXXXXXXXXX"
+                                       ng-disabled="true" value="" name="catalogId" ng-model="catalogModel.id">
+                                    <span id="helpBlock" class="help-block">
+                                        Category ID is automatically allocated, need not to fill this field</span>
+                            </div>
+                            <div class="form-group"
+                                 ng-class="{'has-error' : addEditCatalogForm.catalogName.$invalid && !addEditCatalogForm.catalogName.$pristine}">
+                                <label>Category Name*</label>
+                                <input type="text" class="form-control" name="catalogName"
+                                       ng-model="catalogModel.name" placeholder="Enter Catalog name.." required/>
+                                <p ng-show="addEditCatalogForm.catalogName.$invalid && !addEditCatalogForm.catalogName.$pristine"
+                                   class="text-danger">Category name is mandatory.</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea class="form-control" placeholder="Enter Catalog Description..."
+                                        name="description" ng-model="catalogModel.description"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Slug</label>
+                                <textarea class="form-control" placeholder="Enter Slug Value..."
+                                          name="slug" ng-model="catalogModel.slug"/>
+                            </div>
+                            <div>
+                                <label>Items present in this Category: <span class="badge">{{catalogModel.productCount || 0}}</span></label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Upload Image for Category</label>
+                                    <input type="file" name="file" class="inputimg" id="catIcon" accept="image/*"
+                                           onchange="angular.element(this).scope().uploadImage('catIcon')" ng-model="catalogModel.icon" value="Image">
+                                    <span class="text-muted">Note: Image displayed in case of Edit is current image,please upload to add a new image.</span>
+                                </div>
+                                    <img src="{{imageStaticUrl}}{{catalogModel.icon}}" class="table-image" ng-if="catalogModel.icon">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" ng-click="resetCatalogForm()">
+                            Reset
+                        </button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                ng-disabled="addEditCatalogForm.$invalid || isImageUploading"
+                                ng-click="submitCatalogForm(catalogModel)">Add/Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="deleteModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p>Are you sure, you want to delete the record?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="confirmDelete()">Yes</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+</div>
